@@ -1,10 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Axios from "axios";
+import Message from "./Message";
 
 const FileUpload = () => {
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("Choose File");
   const [uploadedFile, setUploadedFile] = useState({});
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setFile(e.target.files[0]);
@@ -16,7 +18,6 @@ const FileUpload = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    console.log(formData);
 
     try {
       const res = await Axios.post("/upload", formData, {
@@ -27,17 +28,26 @@ const FileUpload = () => {
 
       const { fileName, filePath } = res.data;
       setUploadedFile({ fileName, filePath });
+      setMessage("File Uploaded!");
     } catch (error) {
       if (error.response.status === 500) {
-        console.log("Server Error");
+        setMessage("Server Error Occurred");
       } else {
-        console.log(error.response.data.msg);
+        setMessage(error.response.data.msg);
       }
     }
   };
 
+  useEffect(() => {
+    const alertTime = setTimeout(() => {
+      setMessage("");
+    }, 3000);
+    return () => clearTimeout(alertTime);
+  }, [message]);
+
   return (
     <Fragment>
+      {message ? <Message msg={message} /> : null}
       <form onSubmit={handleSubmit}>
         <div className="custom-file mb-2">
           <label className="custom-file-label" htmlFor="customFile">
