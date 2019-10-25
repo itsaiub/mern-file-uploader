@@ -1,10 +1,14 @@
 import React from "react";
 import "./App.css";
+import FileUpload from "./components/FileUpload";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header"></header>
+    <div className="container mt-4">
+      <h4 className="display-4 text-center mb-4">
+        <i className="fab fa-react"></i>&nbsp;React File Upload
+      </h4>
+      <FileUpload />
     </div>
   );
 }
